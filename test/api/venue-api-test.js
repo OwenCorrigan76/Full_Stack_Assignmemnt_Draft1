@@ -1,15 +1,18 @@
 import { assert } from "chai";
 import { assertSubset } from "../test-utils.js";
 import { liveService } from "./live-service.js";
-import {maggie, club, testVenues } from "../fixtures.js";
+import {maggie, club, testVenues, maggieCredentials,} from "../fixtures.js";
 
 suite("Venue API tests", () => {
     let user = null;
 
     setup(async () => {
+        liveService.clearAuth();
+        await liveService.authenticate(maggieCredentials);
         await liveService.deleteAllVenues();
         await liveService.deleteAllUsers();
         user = await liveService.createUser(maggie);
+
         club.userid = user._id;
     });
     teardown(async () => {});
@@ -20,7 +23,7 @@ suite("Venue API tests", () => {
         assertSubset(club, returnedVenue);
     });
 
-    test("delete a playlist", async () => {
+    test("delete a venue", async () => {
         const venue = await liveService.createVenue(club);
         const response = await liveService.deleteVenue(venue._id);
         assert.equal(response.status, 204);

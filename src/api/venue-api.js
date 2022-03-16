@@ -1,10 +1,14 @@
 import Boom from "@hapi/boom";
-import { VenueSpec } from "../models/joi-schemas.js";
-import { db } from "../models/db.js";
+import {db} from "../models/db.js";
+import { IdSpec, VenueArraySpec, VenueSpec, VenueSpecPlus } from "../models/joi-schemas.js";
+import { validationError } from "./logger.js";
+
 
 export const venueApi = {
     find: {
-        auth: false,
+        auth: {
+            strategy: "jwt",
+        },
         handler: async function (request, h) {
             try {
                 const venues = await db.venueStore.getAllVenues();
@@ -13,29 +17,42 @@ export const venueApi = {
                 return Boom.serverUnavailable("Database Error");
             }
         },
+        tags: ["api"],
+        response: { schema: VenueArraySpec, failAction: validationError },
+        description: "Get all Venues",
+        notes: "Returns all Venues",
+
     },
 
     findOne: {
-        auth: false,
-        async handler(request) {
+        auth: {
+            strategy: "jwt",
+        },        async handler(request) {
             try {
                 const venue = await db.venueStore.getVenueById(request.params.id);
                 if (!venue) {
-                    return Boom.notFound("No Venue with this id");
+                    return Boom.notFound("No VenueType with this id");
                 }
                 return venue;
             } catch (err) {
-                return Boom.serverUnavailable("No Venue with this id");
+                return Boom.serverUnavailable("No VenueType with this id");
             }
         },
+        tags: ["api"],
+        description: "Find a Venue",
+        notes: "Returns a venue",
+        validate: { params: { id: IdSpec }, failAction: validationError },
+        response: { schema: VenueSpecPlus, failAction: validationError },
     },
 
     create: {
-        auth: false,
+        auth: {
+            strategy: "jwt",
+        },
         handler: async function (request, h) {
             try {
                 const venue = request.payload;
-                const newVenue= await db.venueStore.addVenue(venue);
+                const newVenue = await db.venueStore.addVenue(venue);
                 if (newVenue) {
                     return h.response(newVenue).code(201);
                 }
@@ -44,10 +61,17 @@ export const venueApi = {
                 return Boom.serverUnavailable("Database Error");
             }
         },
+        tags: ["api"],
+        description: "Create a Venue",
+        notes: "Returns the newly created venue",
+        validate: { payload: VenueSpec, failAction: validationError },
+        response: { schema: VenueSpecPlus, failAction: validationError },
     },
 
     deleteOne: {
-        auth: false,
+        auth: {
+            strategy: "jwt",
+        },
         handler: async function (request, h) {
             try {
                 const venue = await db.venueStore.getVenueById(request.params.id);
@@ -60,10 +84,15 @@ export const venueApi = {
                 return Boom.serverUnavailable("No Venue with this id");
             }
         },
+        tags: ["api"],
+        description: "Delete a venue",
+        validate: { params: { id: IdSpec }, failAction: validationError },
     },
 
     deleteAll: {
-        auth: false,
+        auth: {
+            strategy: "jwt",
+        },
         handler: async function (request, h) {
             try {
                 await db.venueStore.deleteAllVenues();
@@ -72,5 +101,10 @@ export const venueApi = {
                 return Boom.serverUnavailable("Database Error");
             }
         },
+        tags: ["api"],
+        description: "Delete all Venues",
     },
+
+
 };
+

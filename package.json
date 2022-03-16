@@ -8,6 +8,8 @@
     "start": "node src/server.js",
     "lint": "./node_modules/.bin/eslint . --ext .js",
     "test": "./node_modules/mocha/bin/mocha --ui tdd test/**/*.js",
+    "testmodels": "./node_modules/mocha/bin/mocha --ui tdd test/models/**/*.js",
+    "testapi": "./node_modules/mocha/bin/mocha --ui tdd test/api/**/*.js",
     "dev": "./node_modules/.bin/nodemon  src/server.js"
   },
   "dependencies": {
@@ -17,9 +19,13 @@
     "@hapi/inert": "^6.0.5",
     "@hapi/vision": "^6.1.0",
     "api": "^4.2.0",
+    "curl": "^0.1.4",
     "dotenv": "^16.0.0",
     "handlebars": "^4.7.7",
+    "hapi-auth-jwt2": "^10.2.0",
+    "hapi-swagger": "^14.2.5",
     "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
     "lowdb": "^3.0.0",
     "mongoose": "^6.2.6",
     "uuid": "^8.3.2"
