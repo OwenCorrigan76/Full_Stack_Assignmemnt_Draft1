@@ -24,7 +24,6 @@ export const liveService = {
         return res.data;
     },
 
-
     async createVenue(venue) {
         const res = await axios.post(`${this.playtimeUrl}/api/venues`, venue);
         return res.data;
@@ -50,7 +49,6 @@ export const liveService = {
         return res.data;
 
     },
-
 
     async authenticate(user) {
         const response = await axios.post(`${this.playtimeUrl}/api/users/authenticate`, user);

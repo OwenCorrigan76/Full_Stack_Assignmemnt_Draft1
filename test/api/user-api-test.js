@@ -10,7 +10,6 @@ const users = new Array(testUsers.length);
 suite("User API tests", () => {
     setup(async () => {
         liveService.clearAuth();
-
         await liveService.createUser(maggie);
         await liveService.authenticate(maggieCredentials);
         await liveService.deleteAllUsers();

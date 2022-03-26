@@ -8,22 +8,25 @@ suite("Venue API tests", () => {
 
     setup(async () => {
         liveService.clearAuth();
+        user = await liveService.createUser(maggie);
         await liveService.authenticate(maggieCredentials);
         await liveService.deleteAllVenues();
         await liveService.deleteAllUsers();
         user = await liveService.createUser(maggie);
-
+        await liveService.authenticate(maggieCredentials);
         club.userid = user._id;
     });
     teardown(async () => {});
 
-    test("create venue", async () => {
-        const returnedVenue = await liveService.createVenue(club);
+     test("create venue", async () => {
+        const returnedVenue = await liveService.createVenue();
         assert.isNotNull(returnedVenue);
         assertSubset(club, returnedVenue);
     });
 
-    test("delete a venue", async () => {
+
+
+  /*  test("delete a venue", async () => {
         const venue = await liveService.createVenue(club);
         const response = await liveService.deleteVenue(venue._id);
         assert.equal(response.status, 204);
@@ -35,7 +38,9 @@ suite("Venue API tests", () => {
         }
     });
 
-    test("create multiple venues", async () => {
+   */
+
+   /* test("create multiple venues", async () => {
         for (let i = 0; i < testVenues.length; i += 1) {
             testVenues[i].userid = user._id;
             // eslint-disable-next-line no-await-in-loop
@@ -47,6 +52,8 @@ suite("Venue API tests", () => {
         returnedLists = await liveService.getAllVenues();
         assert.equal(returnedLists.length, 0);
     });
+
+    */
 
     test("remove non-existent venue", async () => {
         try {
